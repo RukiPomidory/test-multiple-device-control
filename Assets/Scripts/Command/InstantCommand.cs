@@ -13,7 +13,7 @@ namespace DeviceControl
         
         public override void Execute(Vector3 target)
         {
-            device.SetState(target);
+            device.SetPosition(target);
             OnFinish?.Invoke();
         }
 
