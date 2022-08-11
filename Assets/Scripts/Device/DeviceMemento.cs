@@ -4,11 +4,11 @@ namespace DeviceControl
 {
     public class DeviceMemento
     {
-        public Vector3 State { get; }
+        public Vector3 Position { get; }
 
-        public DeviceMemento(Vector3 state)
+        public DeviceMemento(Vector3 position)
         {
-            State = state;
+            Position = position;
         }
     }
 }

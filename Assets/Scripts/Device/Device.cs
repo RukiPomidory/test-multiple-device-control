@@ -33,7 +33,7 @@ namespace DeviceControl
 
         public void RestoreState(DeviceMemento memento)
         {
-            Position = memento.State;
+            Position = memento.Position;
         }
     }
 }
