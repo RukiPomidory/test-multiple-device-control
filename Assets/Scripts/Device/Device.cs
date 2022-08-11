@@ -1,19 +1,33 @@
-using System.Collections;
 using System.Collections.Generic;
-using DefaultNamespace;
+using DeviceControl;
 using UnityEngine;
 
-public abstract class Device
+namespace DeviceControl
 {
-    protected Vector3 state;
-
-    public DeviceMemento SaveState()
+    public abstract class Device
     {
-        return new DeviceMemento(state);
-    }
+        public Vector3 State { get; protected set; }
 
-    public void RestoreState(DeviceMemento memento)
-    {
-        state = memento.State;
+        protected List<Command> availableCommands = new();
+
+        public void SetState(Vector3 state)
+        {
+            State = state;
+        }
+
+        public void AddCommand(Command command)
+        {
+            availableCommands.Add(command);
+        }
+        
+        public DeviceMemento SaveState()
+        {
+            return new DeviceMemento(State);
+        }
+
+        public void RestoreState(DeviceMemento memento)
+        {
+            State = memento.State;
+        }
     }
 }

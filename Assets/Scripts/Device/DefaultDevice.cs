@@ -1,4 +1,4 @@
-﻿namespace DefaultNamespace
+﻿namespace DeviceControl
 {
     public class DefaultDevice : Device
     {
