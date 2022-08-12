@@ -7,11 +7,11 @@ namespace DeviceControl
 {
     public abstract class Device
     {
-        public Vector3 Position { get; protected set; }
+        public virtual Vector3 Position { get; protected set; }
 
         protected List<Command> availableCommands = new();
         
-        public void SetPosition(Vector3 position)
+        public virtual void SetPosition(Vector3 position)
         {
             Position = position;
         }

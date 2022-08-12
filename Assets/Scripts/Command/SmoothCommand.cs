@@ -7,10 +7,12 @@ namespace DeviceControl
 {
     public class SmoothCommand : Command
     {
-        private AnalogDevice device;
+        private Device device;
         private Task transition;
 
-        public SmoothCommand(AnalogDevice device)
+        public float Duration { get; protected set; }
+
+        public SmoothCommand(Device device)
         {
             this.device = device;
         }

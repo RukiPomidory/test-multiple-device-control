@@ -4,9 +4,9 @@ namespace DeviceControl
 {
     public class InstantCommand : Command
     {
-        private DiscreteDevice device;
+        private Device device;
         
-        public InstantCommand(DiscreteDevice device)
+        public InstantCommand(Device device)
         {
             this.device = device;
         }
