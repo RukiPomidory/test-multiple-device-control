@@ -10,6 +10,18 @@ namespace DeviceControl
         public virtual Vector3 Position { get; protected set; }
 
         protected List<Command> availableCommands = new();
+
+        public Command GetCommand<T>() where T : Command
+        {
+            var commands = GetAvailableCommands();
+            foreach (var command in commands)
+            {
+                if (command.GetType() == typeof(T))
+                    return command;
+            }
+
+            return null;
+        }
         
         public virtual void SetPosition(Vector3 position)
         {

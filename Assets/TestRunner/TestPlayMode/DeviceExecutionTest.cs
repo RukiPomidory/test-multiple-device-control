@@ -29,7 +29,7 @@ public class DeviceExecutionTest
         var factory = new AnalogDeviceFactory();
         var device = factory.CreateDevice();
 
-        var smoothCommand = device.GetAvailableCommands()[0];
+        var smoothCommand = device.GetCommand<SmoothCommand>();
 
         yield return CheckSmooth(device, smoothCommand);
     }
@@ -40,17 +40,8 @@ public class DeviceExecutionTest
         var factory = new CombinedDeviceFactory();
         var device = factory.CreateDevice();
 
-        Command instant = null;
-        Command smooth = null;
-
-        foreach (var command in device.GetAvailableCommands())
-        {
-            if (command.GetType() == typeof(InstantCommand))
-                instant = command;
-            
-            if (command.GetType() == typeof(SmoothCommand))
-                smooth = command;
-        }
+        Command instant = device.GetCommand<InstantCommand>();
+        Command smooth = device.GetCommand<SmoothCommand>();
 
         yield return CheckInstant(device, instant);
         
