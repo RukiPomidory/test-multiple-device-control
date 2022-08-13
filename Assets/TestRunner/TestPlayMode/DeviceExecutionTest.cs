@@ -18,7 +18,7 @@ public class DeviceExecutionTest
         var factory = new DiscreteDeviceFactory();
         var device = factory.CreateDevice();
 
-        var instantCommand = device.GetAvailableCommands()[0];
+        var instantCommand = device.GetCommand<InstantCommand>();
 
         yield return CheckInstant(device, instantCommand);
     }
