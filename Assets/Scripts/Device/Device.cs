@@ -11,17 +11,7 @@ namespace DeviceControl
 
         protected List<Command> availableCommands = new();
 
-        public Command GetCommand<T>() where T : Command
-        {
-            var commands = GetAvailableCommands();
-            foreach (var command in commands)
-            {
-                if (command.GetType() == typeof(T))
-                    return command;
-            }
-
-            return null;
-        }
+        public abstract Command GetCommand<T>() where T : Command;
         
         public virtual void SetPosition(Vector3 position)
         {

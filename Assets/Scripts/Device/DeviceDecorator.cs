@@ -14,6 +14,11 @@ namespace DeviceControl
             this.device = device;
         }
 
+        public override Command GetCommand<T>()
+        {
+            return device.GetCommand<T>();
+        }
+
         public override void SetPosition(Vector3 position)
         {
             device.SetPosition(position);
