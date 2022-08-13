@@ -10,7 +10,8 @@ namespace DeviceControl
     {
         private Device device;
         private Task transition;
-
+        private CancellationTokenSource cancellationSource;
+        
         public float Duration { get; protected set; }
 
         public SmoothCommand(Device device, float duration = 1.5f)
@@ -21,19 +22,46 @@ namespace DeviceControl
         
         public override void Execute(Vector3 target)
         {
+            if (InProgress())
+            {
+                //TODO обработка коллизии
+                throw new InvalidOperationException();
+                return;
+            }
+
+            cancellationSource = new CancellationTokenSource();
+            transition = RunTransition(target, cancellationSource.Token);
+            transition.ContinueWith(task => cancellationSource.Dispose());
+        }
+
+        public override void Stop()
+        {
+            if (!InProgress())
+                return;
+            
+            cancellationSource.Cancel();
+        }
+
+        private Task RunTransition(Vector3 target, CancellationToken cancelToken)
+        {
+            // TODO выделить отдельный класс Command для продолжительных команд
+            
             var startTime = DeviceUtils.LocalTime();
             var startValue = device.Position;
             var delta = DeviceUtils.GetTaskDeltaMilliseconds();
             
-            // Чтобы точно успеть все провернуть
+            // Чтобы точно успеть все сделать за ожидаемый Duration
             var duration = Duration * 0.98f;
             
-            Task.Run(() =>
+            return Task.Factory.StartNew(() =>
             {
                 float progress = 0;
 
                 while (progress < 1)
                 {
+                    if (cancelToken.IsCancellationRequested)
+                        return;
+                    
                     var time = DeviceUtils.LocalTime();
                     progress = (time - startTime) / duration;
                     progress = Mathf.Clamp01(progress);
@@ -45,15 +73,17 @@ namespace DeviceControl
                     
                     device.SetPosition(newValue);
                     
-                    
                     Thread.Sleep(delta);
                 }
-            });
+            }, cancelToken);
         }
         
-        public override void Stop()
+        private bool InProgress()
         {
-            throw new NotImplementedException();
+            if (transition == null)
+                return false;
+            
+            return transition.Status.Equals(TaskStatus.Running);
         }
     }
 }
