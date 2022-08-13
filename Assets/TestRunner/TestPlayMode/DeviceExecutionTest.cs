@@ -9,7 +9,7 @@ public class DeviceExecutionTest
 {
     public static float RandomFloat()
     {
-        return (Random.value - 0.5f) * float.MaxValue;
+        return (Random.value - 0.5f) * 1000000;
     }
     
     [UnityTest]
@@ -66,15 +66,21 @@ public class DeviceExecutionTest
 
     private IEnumerator CheckSmooth(Device device, Command smoothCommand)
     {
-        Assert.AreEqual(Vector3.zero, device.Position);
-        
+        var startPosition = device.Position;
         var target = new Vector3(RandomFloat(), RandomFloat(), RandomFloat());
+        
+        Assert.AreEqual(Vector3.zero, startPosition);
         
         smoothCommand.Execute(target);
 
         var transitionDuration = ((SmoothCommand)smoothCommand).Duration;
         
-        yield return new WaitForSeconds(transitionDuration);
+        yield return new WaitForSeconds(transitionDuration / 2);
+        
+        Assert.AreNotEqual(target, device.Position);
+        Assert.AreNotEqual(startPosition, device.Position);
+        
+        yield return new WaitForSeconds(transitionDuration / 2);
         
         Assert.AreEqual(target, device.Position);
     }
