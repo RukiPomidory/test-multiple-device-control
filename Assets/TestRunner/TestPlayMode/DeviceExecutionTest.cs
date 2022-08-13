@@ -74,13 +74,15 @@ public class DeviceExecutionTest
         smoothCommand.Execute(target);
 
         var transitionDuration = ((SmoothCommand)smoothCommand).Duration;
+
+        var firstDelay = transitionDuration / 2;
         
-        yield return new WaitForSeconds(transitionDuration / 2);
+        yield return new WaitForSeconds(firstDelay);
         
         Assert.AreNotEqual(target, device.Position);
         Assert.AreNotEqual(startPosition, device.Position);
         
-        yield return new WaitForSeconds(transitionDuration / 2);
+        yield return new WaitForSeconds(transitionDuration - firstDelay);
         
         Assert.AreEqual(target, device.Position);
     }
