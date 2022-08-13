@@ -1,8 +1,13 @@
-﻿namespace DeviceControl
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace DeviceControl
 {
     public class DefaultDevice : Device
     {
         public override string Name { get; set; }
+        
+        protected List<Command> availableCommands = new();
         
         public override Command GetCommand<T>()
         {
@@ -13,6 +18,16 @@
             }
 
             return null;
+        }
+
+        public override void AddCommand(Command command)
+        {
+            availableCommands.Add(command);
+        }
+
+        public override List<Command> GetAvailableCommands()
+        {
+            return availableCommands.ToList();
         }
     }
 }

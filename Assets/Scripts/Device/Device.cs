@@ -11,8 +11,6 @@ namespace DeviceControl
 
         public virtual Vector3 Position { get; protected set; }
 
-        protected List<Command> availableCommands = new();
-
         public abstract Command GetCommand<T>() where T : Command;
         
         public virtual void SetPosition(Vector3 position)
@@ -20,15 +18,9 @@ namespace DeviceControl
             Position = position;
         }
 
-        public virtual void AddCommand(Command command)
-        {
-            availableCommands.Add(command);
-        }
+        public abstract void AddCommand(Command command);
 
-        public virtual List<Command> GetAvailableCommands()
-        {
-            return availableCommands.ToList();
-        }
+        public abstract List<Command> GetAvailableCommands();
         
         public DeviceMemento SaveState()
         {
