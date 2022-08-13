@@ -5,6 +5,12 @@ namespace DeviceControl
 {
     public abstract class DeviceDecorator : Device
     {
+        public override string Name
+        {
+            get => device.Name;
+            set => device.Name = value;
+        }
+
         public override Vector3 Position => device.Position;
 
         protected Device device;

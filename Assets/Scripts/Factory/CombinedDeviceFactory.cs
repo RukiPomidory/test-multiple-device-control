@@ -1,8 +1,8 @@
 ﻿namespace DeviceControl
 {
-    public class CombinedDeviceFactory : IDeviceFactory
+    public class CombinedDeviceFactory : DeviceFactory
     {
-        public Device CreateDevice()
+        public override Device CreateDevice()
         {
             var device = new DefaultDevice();
             var combinedDevice = new CombinedDevice(device);

@@ -7,6 +7,8 @@ namespace DeviceControl
 {
     public abstract class Device
     {
+        public abstract string Name { get; set; }
+
         public virtual Vector3 Position { get; protected set; }
 
         protected List<Command> availableCommands = new();
@@ -30,12 +32,13 @@ namespace DeviceControl
         
         public DeviceMemento SaveState()
         {
-            return new DeviceMemento(Position);
+            return new DeviceMemento(Position, GetType(), Name);
         }
 
         public void RestoreState(DeviceMemento memento)
         {
-            Position = memento.Position;
+            SetPosition(memento.Position);
+            Name = memento.Name;
         }
     }
 }

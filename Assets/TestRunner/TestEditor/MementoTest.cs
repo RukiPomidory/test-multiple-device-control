@@ -14,6 +14,7 @@ public class MementoTest
         var state1 = device.SaveState();
         
         Assert.AreEqual(Vector3.zero, state1.Position);
+        Assert.AreEqual(typeof(DefaultDevice), state1.Type);
 
         var position = new Vector3(0, 1, 0);
         device.SetPosition(position);
@@ -27,11 +28,12 @@ public class MementoTest
     {
         var device = new DefaultDevice();
         var position = new Vector3(5, 6, 7);
-        var state = new DeviceMemento(position);
+        var state = new DeviceMemento(position, typeof(DefaultDevice), "");
         
         device.RestoreState(state);
         var savedState = device.SaveState();
         
         Assert.AreEqual(state.Position, savedState.Position);
+        Assert.AreEqual(state.Type, savedState.Type);
     }
 }

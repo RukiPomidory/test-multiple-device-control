@@ -1,14 +1,12 @@
-﻿namespace DeviceControl
+﻿using System.Collections.Generic;
+
+namespace DeviceControl
 {
     public class DeviceControlFacade
     {
         private IDeviceControlOperator deviceOperator;
         private IDeviceControlSerializer serializer;
         private IDeviceControlVisualizer visualizer;
-
-        private DiscreteDeviceFactory discreteFactory;
-        private AnalogDeviceFactory analogFactory;
-        private CombinedDeviceFactory combinedFactory;
         
         public DeviceControlFacade(IDeviceControlOperator deviceOperator, IDeviceControlSerializer serializer, IDeviceControlVisualizer visualizer)
         {
@@ -25,29 +23,25 @@
 
         public void Load()
         {
+            visualizer.RemoveAll();
+            
             var memento = serializer.Load();
             deviceOperator.RestoreState(memento);
+            
+            visualizer.CreateRange(GetAllDevices());
         }
 
-        public void AddDiscreteDevice()
+        public Device CreateDevice<T>() where T : Device
         {
-            CreateAndAddDevice(discreteFactory);
+            var device = deviceOperator.CreateDevice<T>();
+            visualizer.Create(device);
+            
+            return device;
         }
 
-        public void AddAnalogDevice()
+        public List<Device> GetAllDevices()
         {
-            CreateAndAddDevice(analogFactory);
-        }
-        
-        public void AddCombinedDevice()
-        {
-            CreateAndAddDevice(combinedFactory);
-        }
-
-        private void CreateAndAddDevice(IDeviceFactory factory)
-        {
-            var device = factory.CreateDevice();
-            deviceOperator.AddDevice(device);
+            return deviceOperator.GetDevices();
         }
     }
 }

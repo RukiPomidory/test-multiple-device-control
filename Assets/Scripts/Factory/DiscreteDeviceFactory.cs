@@ -1,8 +1,8 @@
 ﻿namespace DeviceControl
 {
-    public class DiscreteDeviceFactory : IDeviceFactory
+    public class DiscreteDeviceFactory : DeviceFactory
     {
-        public Device CreateDevice()
+        public override Device CreateDevice()
         {
             var device = new DefaultDevice();
             var discreteDevice = new DiscreteDevice(device);

@@ -1,20 +1,30 @@
-﻿namespace DeviceControl
+﻿using System.IO;
+using UnityEngine;
+using UnityEngine.WSA;
+
+namespace DeviceControl
 {
     public class DeviceControlSerializer : IDeviceControlSerializer
     {
+        private string savePath;
+        
         public void Save(DeviceControlMemento memento)
         {
-            throw new System.NotImplementedException();
+            var json = JsonUtility.ToJson(memento, true);
+            File.WriteAllText(savePath, json);
         }
 
         public DeviceControlMemento Load()
         {
-            throw new System.NotImplementedException();
+            var json = File.ReadAllText(savePath);
+            var memento = JsonUtility.FromJson<DeviceControlMemento>(json);
+
+            return memento;
         }
 
-        public void SpecifySavePath(string path)
+        public void SpecifySavePath(string savePath)
         {
-            throw new System.NotImplementedException();
+            this.savePath = savePath;
         }
     }
 }

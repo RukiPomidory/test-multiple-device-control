@@ -1,8 +1,8 @@
 ﻿namespace DeviceControl
 {
-    public class AnalogDeviceFactory : IDeviceFactory
+    public class AnalogDeviceFactory : DeviceFactory
     {
-        public Device CreateDevice()
+        public override Device CreateDevice()
         {
             var device = new DefaultDevice();
             var analogDevice = new AnalogDevice(device);

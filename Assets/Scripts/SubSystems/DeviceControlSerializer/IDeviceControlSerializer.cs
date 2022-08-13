@@ -5,6 +5,6 @@
         void Save(DeviceControlMemento memento);
         DeviceControlMemento Load();
 
-        void SpecifySavePath(string path);
+        void SpecifySavePath(string savePath);
     }
 }
