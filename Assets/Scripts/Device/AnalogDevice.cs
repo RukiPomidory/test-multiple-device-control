@@ -7,8 +7,7 @@ namespace DeviceControl
 
         public AnalogDevice(Device device) : base(device)
         {
-            var smoothCommand = new SmoothCommand(this);
-            this.device.AddCommand(smoothCommand);
+            this.device.AddCommand(new SmoothCommand(this));
         }
     }
 }

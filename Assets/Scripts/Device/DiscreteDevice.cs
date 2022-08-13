@@ -6,8 +6,7 @@ namespace DeviceControl
     {
         public DiscreteDevice(Device device) : base(device)
         {
-            var instantCommand = new InstantCommand(this);
-            this.device.AddCommand(instantCommand);
+            this.device.AddCommand(new InstantCommand(this));
         }
     }
 }

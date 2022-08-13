@@ -5,8 +5,7 @@
         public Device CreateDevice()
         {
             var device = new DefaultDevice();
-            var discreteDevice = new DiscreteDevice(device);
-            var combinedDevice = new AnalogDevice(discreteDevice);
+            var combinedDevice = new CombinedDevice(device);
 
             return combinedDevice;
         }
