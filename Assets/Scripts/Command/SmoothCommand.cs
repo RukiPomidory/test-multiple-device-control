@@ -25,7 +25,13 @@ namespace DeviceControl
             
             cancellationSource = new CancellationTokenSource();
             transition = RunTransition(target, cancellationSource.Token);
-            transition.ContinueWith(task => cancellationSource.Dispose());
+            transition.ContinueWith(task =>
+            {
+                if (!cancellationSource.IsCancellationRequested)
+                    OnFinish?.Invoke();
+                
+                cancellationSource.Dispose();
+            });
         }
 
         public override void Stop()
