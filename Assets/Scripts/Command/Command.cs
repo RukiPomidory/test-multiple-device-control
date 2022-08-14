@@ -9,8 +9,19 @@ namespace DeviceControl
         public Action OnFinish;
 
         protected Device device;
-        protected CollisionHandler collisionHandler;
+        protected ICollisionHandler collisionHandler;
 
+        public Command()
+        {
+            var factory = new ExceptionCollisionHandlerFactory();
+            collisionHandler = factory.Create();
+        }
+
+        public void SetCollisionHandler(ICollisionHandler handler)
+        {
+            collisionHandler = handler;
+        }
+        
         public void Execute(Vector3 target)
         {
             if (device.CurrentCommand == null)
@@ -19,7 +30,7 @@ namespace DeviceControl
                 return;
             }
 
-            throw new NotImplementedException();
+            collisionHandler.Handle(device.CurrentCommand, () => Execute(target));
         }
         
         public abstract void Stop();
