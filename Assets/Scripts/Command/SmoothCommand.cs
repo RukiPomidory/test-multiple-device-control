@@ -6,32 +6,15 @@ using Utils;
 
 namespace DeviceControl
 {
-    public class SmoothCommand : Command
+    public class SmoothCommand : IterativeCommand
     {
-        private Device device;
-        private Task transition;
-        private CancellationTokenSource cancellationSource;
+        private Vector3 startValue;
+        private Vector3 targetValue;
         
-        public float Duration { get; protected set; }
-
         public SmoothCommand(Device device, float duration = 1.5f)
         {
             this.device = device;
             Duration = duration;
-        }
-        
-        public override void Execute(Vector3 target)
-        {
-            if (InProgress())
-            {
-                //TODO обработка коллизии
-                throw new InvalidOperationException();
-                return;
-            }
-
-            cancellationSource = new CancellationTokenSource();
-            transition = RunTransition(target, cancellationSource.Token);
-            transition.ContinueWith(task => cancellationSource.Dispose());
         }
 
         public override void Stop()
@@ -40,50 +23,33 @@ namespace DeviceControl
                 return;
             
             cancellationSource.Cancel();
+            OnFinish?.Invoke();
         }
 
-        private Task RunTransition(Vector3 target, CancellationToken cancelToken)
+        protected override void Prepare(Vector3 target)
         {
-            // TODO выделить отдельный класс Command для продолжительных команд
-            
-            var startTime = DeviceUtils.LocalTime();
-            var startValue = device.Position;
-            var delta = DeviceUtils.GetTaskDeltaMilliseconds();
-            
-            // Чтобы точно успеть все сделать за ожидаемый Duration
-            var duration = Duration * 0.98f;
-            
-            return Task.Factory.StartNew(() =>
+            lock (device)
             {
-                float progress = 0;
+                startValue = device.Position;
+            }
 
-                while (progress < 1)
-                {
-                    if (cancelToken.IsCancellationRequested)
-                        return;
-                    
-                    var time = DeviceUtils.LocalTime();
-                    progress = (time - startTime) / duration;
-                    progress = Mathf.Clamp01(progress);
-                
-                    var newValue = startValue * (1 - progress) + target * progress;
-
-                    if (progress >= 1)
-                        newValue = target;
-                    
-                    device.SetPosition(newValue);
-                    
-                    Thread.Sleep(delta);
-                }
-            }, cancelToken);
+            targetValue = target;
         }
-        
-        private bool InProgress()
+
+        protected override void Iterate(float progress, CancellationToken cancelToken)
         {
-            if (transition == null)
-                return false;
+            var newValue = startValue * (1 - progress) + targetValue * progress;
             
-            return transition.Status.Equals(TaskStatus.Running);
+            if (progress >= 1)
+                newValue = targetValue;
+
+            if (!cancelToken.IsCancellationRequested)
+            {
+                lock (device)
+                {
+                    device.SetPosition(newValue);
+                }
+            }
         }
     }
 }

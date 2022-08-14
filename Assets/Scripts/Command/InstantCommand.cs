@@ -4,15 +4,14 @@ namespace DeviceControl
 {
     public class InstantCommand : Command
     {
-        private Device device;
-        
         public InstantCommand(Device device)
         {
             this.device = device;
         }
         
-        public override void Execute(Vector3 target)
+        protected override void Process(Vector3 target)
         {
+            OnStarted?.Invoke();
             device.SetPosition(target);
             OnFinish?.Invoke();
         }

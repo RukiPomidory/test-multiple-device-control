@@ -6,8 +6,11 @@ namespace DeviceControl
     public class DefaultDevice : Device
     {
         public override string Name { get; set; }
-        
+        public override Command CurrentCommand => currentCommand;
+
         protected List<Command> availableCommands = new();
+
+        protected Command currentCommand;
         
         public override Command GetCommand<T>()
         {
@@ -22,6 +25,9 @@ namespace DeviceControl
 
         public override void AddCommand(Command command)
         {
+            command.SubscribeOnStart(() => currentCommand = command);
+            command.SubscribeOnFinish(() => currentCommand = null);
+            
             availableCommands.Add(command);
         }
 
