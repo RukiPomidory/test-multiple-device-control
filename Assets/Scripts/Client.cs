@@ -1,32 +1,37 @@
 ﻿using System;
+using DeviceControl.UI;
 using UnityEngine;
 
 namespace DeviceControl
 {
     public class Client : MonoBehaviour
     {
-        public GameObject deviceVisualPrefab;
-        public Transform devicesParent;
+        [SerializeField]
+        private MenuController menuController;
+        [SerializeField]
+        private GameObject deviceVisualPrefab;
+        [SerializeField]
+        private Transform devicesParent;
         
         private DeviceControlFacade deviceControl;
+
+        public void AddDeviceTest()
+        {
+            AddDevice<CombinedDevice>();
+        }
         
         private void Start()
         {
             deviceControl = CreateDeviceFacade();
-
-             var device = deviceControl.CreateDevice<DiscreteDevice>();
-             var device2 = deviceControl.CreateDevice<AnalogDevice>();
-             var device3 = deviceControl.CreateDevice<CombinedDevice>();
-            
-             var command = device.GetCommand<InstantCommand>();
-            
-             command.Execute(new Vector3(5, 5, 9));
-            
-            deviceControl.Save();
-            
             deviceControl.Load();
         }
 
+        private void AddDevice<T>() where T : Device
+        {
+            var device = deviceControl.CreateDevice<T>();
+            menuController.AddMenuElement(device);
+        }
+        
         private DeviceControlFacade CreateDeviceFacade()
         {
             var deviceOperator = new DeviceControlOperator();
