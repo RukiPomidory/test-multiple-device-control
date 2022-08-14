@@ -15,7 +15,7 @@ namespace DeviceControl
         {
             var factory = new ExceptionCollisionHandlerFactory();
             
-            collisionHandler = factory.Create();
+            SetCollisionHandler(factory.Create());
         }
 
         public void SetCollisionHandler(ICollisionHandler handler)
