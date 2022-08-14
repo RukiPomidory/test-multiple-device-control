@@ -32,6 +32,17 @@ namespace DeviceControl
         {
             OnFinish += handler;
         }
+
+        public virtual void SubscribeOnFinishOnce(Action handler)
+        {
+            void ExecutedOnce()
+            {
+                OnFinish -= ExecutedOnce;
+                handler?.Invoke();
+            }
+
+            OnFinish += ExecutedOnce;
+        }
         
         public void Execute(Vector3 target)
         {
