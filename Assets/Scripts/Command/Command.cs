@@ -5,8 +5,8 @@ namespace DeviceControl
 {
     public abstract class Command
     {
-        public Action OnStarted;
-        public Action OnFinish;
+        protected Action OnStarted;
+        protected Action OnFinish;
 
         protected Device device;
         protected ICollisionHandler collisionHandler;
@@ -14,12 +14,23 @@ namespace DeviceControl
         public Command()
         {
             var factory = new ExceptionCollisionHandlerFactory();
+            
             collisionHandler = factory.Create();
         }
 
         public void SetCollisionHandler(ICollisionHandler handler)
         {
             collisionHandler = handler;
+        }
+
+        public virtual void SubscribeOnStart(Action handler)
+        {
+            OnStarted += handler;
+        }
+
+        public virtual void SubscribeOnFinish(Action handler)
+        {
+            OnFinish += handler;
         }
         
         public void Execute(Vector3 target)

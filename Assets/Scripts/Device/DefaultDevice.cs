@@ -25,8 +25,8 @@ namespace DeviceControl
 
         public override void AddCommand(Command command)
         {
-            command.OnStarted += () => currentCommand = command;
-            command.OnFinish += () => currentCommand = null;
+            command.SubscribeOnStart(() => currentCommand = command);
+            command.SubscribeOnFinish(() => currentCommand = null);
             
             availableCommands.Add(command);
         }

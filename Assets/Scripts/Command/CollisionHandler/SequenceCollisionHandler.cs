@@ -6,7 +6,7 @@ namespace DeviceControl
     {
         public void Handle(Command current, Action runRequestedCommand)
         {
-            current.OnFinish += runRequestedCommand;
+            current.SubscribeOnFinish(runRequestedCommand);
         }
     }
 }
