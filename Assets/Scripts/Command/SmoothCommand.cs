@@ -21,6 +21,8 @@ namespace DeviceControl
         
         protected override void Process(Vector3 target)
         {
+            OnStarted?.Invoke();
+            
             cancellationSource = new CancellationTokenSource();
             transition = RunTransition(target, cancellationSource.Token);
             transition.ContinueWith(task => cancellationSource.Dispose());
@@ -32,6 +34,7 @@ namespace DeviceControl
                 return;
             
             cancellationSource.Cancel();
+            OnFinish?.Invoke();
         }
 
         private Task RunTransition(Vector3 target, CancellationToken cancelToken)
@@ -62,9 +65,15 @@ namespace DeviceControl
 
                     if (progress >= 1)
                         newValue = target;
-                    
-                    device.SetPosition(newValue);
-                    
+
+                    if (!cancelToken.IsCancellationRequested)
+                    {
+                        lock (device)
+                        {
+                            device.SetPosition(newValue);
+                        }
+                    }
+
                     Thread.Sleep(delta);
                 }
             }, cancelToken);
