@@ -5,6 +5,8 @@ namespace DeviceControl
 {
     public abstract class DeviceDecorator : Device
     {
+        public override Command CurrentCommand => device.CurrentCommand;
+
         public override string Name
         {
             get => device.Name;

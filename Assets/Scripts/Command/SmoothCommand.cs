@@ -8,7 +8,6 @@ namespace DeviceControl
 {
     public class SmoothCommand : Command
     {
-        private Device device;
         private Task transition;
         private CancellationTokenSource cancellationSource;
         
@@ -20,15 +19,8 @@ namespace DeviceControl
             Duration = duration;
         }
         
-        public override void Execute(Vector3 target)
+        protected override void Process(Vector3 target)
         {
-            if (InProgress())
-            {
-                //TODO обработка коллизии
-                throw new InvalidOperationException();
-                return;
-            }
-
             cancellationSource = new CancellationTokenSource();
             transition = RunTransition(target, cancellationSource.Token);
             transition.ContinueWith(task => cancellationSource.Dispose());
@@ -44,7 +36,7 @@ namespace DeviceControl
 
         private Task RunTransition(Vector3 target, CancellationToken cancelToken)
         {
-            // TODO выделить отдельный класс Command для продолжительных команд
+            // TODO выделить отдельный класс ContinuousCommand для продолжительных команд
             
             var startTime = DeviceUtils.LocalTime();
             var startValue = device.Position;
