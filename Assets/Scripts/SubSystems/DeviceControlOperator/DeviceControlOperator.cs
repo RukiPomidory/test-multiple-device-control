@@ -34,6 +34,11 @@ namespace DeviceControl
             return devices.ToList();
         }
 
+        public List<Type> GetSupportedDeviceTypes()
+        {
+            return factories.Keys.ToList();
+        }
+
         public DeviceControlMemento SaveState()
         {
             var deviceMementos = new List<DeviceMemento>();

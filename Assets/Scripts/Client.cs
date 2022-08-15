@@ -8,30 +8,54 @@ namespace DeviceControl
     {
         [SerializeField]
         private MenuController menuController;
+        
+        [SerializeField]
+        private DeviceConstructorController deviceConstructor;
+        
         [SerializeField]
         private GameObject deviceVisualPrefab;
+        
         [SerializeField]
         private Transform devicesParent;
         
         private DeviceControlFacade deviceControl;
-
-        public void AddDeviceTest()
-        {
-            AddDevice<CombinedDevice>();
-        }
         
         private void Start()
         {
+            Init();
+        }
+
+        private void Init()
+        {
             deviceControl = CreateDeviceFacade();
+            
+            deviceConstructor.OnReady += CreateDeviceRequestHandler;
+
+            foreach (var type in deviceControl.GetSupportedTypes())
+            {
+                deviceConstructor.AddType(type);
+            }
+
             deviceControl.Load();
         }
 
-        private void AddDevice<T>() where T : Device
+        private void CreateDeviceRequestHandler()
         {
-            var device = deviceControl.CreateDevice<T>();
-            menuController.AddMenuElement(device);
+            AddDevice(deviceConstructor.DeviceType, deviceConstructor.DeviceName);
+        }
+
+        private void AddDevice<T>(string deviceName) where T : Device
+        {
+            AddDevice(typeof(T), deviceName);
         }
         
+        private void AddDevice(Type type, string deviceName)
+        {
+            var device = deviceControl.CreateDevice(type);
+            device.Name = deviceName;
+            menuController.AddMenuElement(device);
+        }
+
         private DeviceControlFacade CreateDeviceFacade()
         {
             var deviceOperator = new DeviceControlOperator();
