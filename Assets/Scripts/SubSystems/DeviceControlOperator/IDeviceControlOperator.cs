@@ -9,6 +9,8 @@ namespace DeviceControl
         Device CreateDevice(Type type);
         
         List<Device> GetDevices();
+
+        List<Type> GetSupportedDeviceTypes();
         
         DeviceControlMemento SaveState();
         void RestoreState(DeviceControlMemento memento);

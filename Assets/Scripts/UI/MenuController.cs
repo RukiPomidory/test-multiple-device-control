@@ -10,13 +10,13 @@ namespace DeviceControl.UI
 
         [SerializeField]
         private GameObject addButton;
-
+        
         public void AddMenuElement(Device device)
         {
             CreateElement(device);
             MoveAddButtonDown();
         }
-
+        
         private void CreateElement(Device device)
         {
             var element = Instantiate(deviceElementPrefab, transform);

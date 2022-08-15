@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DeviceControl
 {
@@ -38,10 +39,23 @@ namespace DeviceControl
             
             return device;
         }
+        
+        public Device CreateDevice(Type type)
+        {
+            var device = deviceOperator.CreateDevice(type);
+            visualizer.Create(device);
+            
+            return device;
+        }
 
         public List<Device> GetAllDevices()
         {
             return deviceOperator.GetDevices();
+        }
+
+        public List<Type> GetSupportedTypes()
+        {
+            return deviceOperator.GetSupportedDeviceTypes();
         }
     }
 }
