@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace DeviceControl.UI
@@ -13,6 +14,12 @@ namespace DeviceControl.UI
         [SerializeField]
         private GameObject commandPrefab;
 
+        [SerializeField]
+        private TMP_Text deviceName;
+        
+        [SerializeField]
+        private VectorInput devicePosition;
+        
         private Device device;
 
         public void SetDevice(Device device)
@@ -31,6 +38,13 @@ namespace DeviceControl.UI
         private void Awake()
         {
             ClearCommands();
+            devicePosition.ReadOnly = true;
+        }
+
+        private void Update()
+        {
+            deviceName.text = device.Name;
+            devicePosition.Value = device.Position;
         }
 
         private void ClearCommands()

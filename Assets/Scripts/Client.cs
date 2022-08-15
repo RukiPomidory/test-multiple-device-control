@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DeviceControl.UI;
 using UnityEngine;
 
@@ -25,6 +26,11 @@ namespace DeviceControl
             Init();
         }
 
+        private void OnDestroy()
+        {
+            deviceControl.Save();
+        }
+
         private void Init()
         {
             deviceControl = CreateDeviceFacade();
@@ -37,8 +43,17 @@ namespace DeviceControl
             }
 
             deviceControl.Load();
+            FillMenuWithDevices(deviceControl.GetAllDevices());
         }
 
+        private void FillMenuWithDevices(List<Device> devices)
+        {
+            foreach (var device in devices)
+            {
+                menuController.AddMenuElement(device);
+            }
+        }
+        
         private void CreateDeviceRequestHandler()
         {
             AddDevice(deviceConstructor.DeviceType, deviceConstructor.DeviceName);

@@ -12,7 +12,21 @@ namespace DeviceControl.UI
         private TMP_InputField inputY;
         [SerializeField]
         private TMP_InputField inputZ;
-    
+
+        public bool ReadOnly
+        {
+            get => readOnly;
+            set
+            {
+                inputX.readOnly = value;
+                inputY.readOnly = value;
+                inputZ.readOnly = value;
+                readOnly = value;
+            }
+        }
+
+        private bool readOnly = false;
+        
         public Vector3 Value
         {
             get
