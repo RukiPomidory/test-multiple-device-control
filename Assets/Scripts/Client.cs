@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using DeviceControl.UI;
 using UnityEngine;
 
@@ -7,6 +8,8 @@ namespace DeviceControl
 {
     public class Client : MonoBehaviour
     {
+        private readonly string saveFile = "SavedDevices.json";
+        
         [SerializeField]
         private MenuController menuController;
         
@@ -20,6 +23,7 @@ namespace DeviceControl
         private Transform devicesParent;
         
         private DeviceControlFacade deviceControl;
+        private string savePath;
         
         private void Start()
         {
@@ -33,6 +37,7 @@ namespace DeviceControl
 
         private void Init()
         {
+            savePath = Path.Combine(Application.persistentDataPath, saveFile);
             deviceControl = CreateDeviceFacade();
             
             deviceConstructor.OnReady += CreateDeviceRequestHandler;
@@ -77,7 +82,7 @@ namespace DeviceControl
             var serializer = new DeviceControlSerializer();
             var visualizer = new DeviceControlVisualizer();
 
-            serializer.SpecifySavePath(@"D:\test.json");
+            serializer.SpecifySavePath(savePath);
             
             visualizer.SetPrefab(deviceVisualPrefab);
             visualizer.SetParent(devicesParent);

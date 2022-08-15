@@ -13,7 +13,7 @@ namespace DeviceControl
 
         public Command()
         {
-            var factory = new ExceptionCollisionHandlerFactory();
+            var factory = new ForceCollisionHandlerFactory();
             
             SetCollisionHandler(factory.Create());
         }
